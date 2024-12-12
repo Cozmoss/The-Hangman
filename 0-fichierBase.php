@@ -16,20 +16,10 @@
     //constante d'environnement.
     const NBR_CHANCE = 10;
 
-    //variables qui viennent du formulaire
-    $lettreProposee = "c"; //la lettre proposée qui sera recue via un formulaire plus tard
-    $isLettreOK = true;
 
-
-    //variable externe, elle viendra d'un fichier reprenant une liste de mots à terme
+    //Dictionnaire de mots
     $mots = ["tablette", "ordinateur", "souris", "clavier", "portable", "smartphone"];
 
-    // Réinitialiser le jeu si le bouton "Rejouer" est cliqué
-    if (isset($_POST['rejouer'])) {
-        session_unset(); // Réinitialiser la session
-        header("Location: " . $_SERVER['PHP_SELF']); // Recharger la page
-        exit;
-    }
 
     // Choisir un mot aléatoire dans le tableau
     if (!isset($_SESSION['motMystere'])) {
@@ -37,11 +27,15 @@
     }
     $motMystere = $_SESSION['motMystere']; //le mot à trouver
     
-
-
+    // Réinitialiser le jeu si le bouton "Rejouer" est cliqué
+    if (isset($_POST['rejouer'])) {
+        session_unset(); // Réinitialiser la session
+        header("Location: " . $_SERVER['PHP_SELF']); // Recharger la page
+        exit;
+    }
 
     //variables qui seront calculées à terme. Pour l'instant on indique "en dure" la valeur
-    $nbrEchec = 6; // le nombre de faute
+    $nbrEchec = 0; // le nombre de faute
     $lettres = []; // les lettres trouvées séparées par une virgule.
     
     if (!empty($_POST['lettres'])) {
@@ -99,13 +93,6 @@
         echo "Il te reste " . NBR_CHANCE . " chance.";
         ?>
         </p>
-        <p><?php
-        if (strpos($motMystere, $lettreProposee) !== false) {
-            echo "Bravo, la lettre \"" . $lettreProposee . "\" fait partie du mot.";
-        } else {
-            echo "Dommage, la lettre \"" . $lettreProposee . "\" ne fait pas partie du mot.";
-        }
-        ?></p>
     </div>
     <div class="pendu">
         <div class="potence">
