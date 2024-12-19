@@ -1,0 +1,20 @@
+session_start();
+initializeGameSession($mots);
+
+if (isset($_POST['rejouer'])) {
+    resetGame();
+}
+
+if (!empty($_POST['lettres'])) {
+    $lettres = $_POST['lettres'];
+}
+
+if (isset($_POST['lettre'])) {
+    $nouvelle_lettre = strtolower(trim($_POST['lettre']));
+    processLetterSubmission($nouvelle_lettre, $motMystere);
+} elseif (isset($_POST['mot'])) {
+    $motPropose = strtolower(trim($_POST['mot']));
+    processWordSubmission($motPropose, $motMystere);
+}
+
+$motTrouve = isWordFound($motMystere);
