@@ -17,7 +17,24 @@
     const NBR_CHANCE = 10;
 
     // Dictionnaire de mots
-    $mots = ["tablette", "ordinateur", "souris", "clavier", "portable", "smartphone"];
+    $fichier = 'liste_mots_finale.txt';
+    
+    function getMotMystereDepuisFichier($fichier) {
+        // Vérifier si le fichier existe
+        if (!file_exists($fichier)) {
+            die("Erreur : le fichier $fichier n'existe pas.");
+        }
+    
+        // Lire toutes les lignes du fichier dans un tableau
+        $mots = file($fichier, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        
+        // Vérifier si le fichier contient des mots
+        if (empty($mots)) {
+            die("Erreur : le fichier est vide ou ne contient aucun mot valide.");
+        }
+        
+        return $mots;
+    }
 
     // Tableau des lettres entrée par l'utilisateur
     $lettres = [];
@@ -136,7 +153,7 @@
         <?php if (!empty($_SESSION['lettres'])): ?>
             <p><?= htmlspecialchars(implode(', ', $_SESSION['lettres'])) ?></p>
         <?php else: ?>
-            <p>Aucune lettre ajoutée pour le moment.</p>
+            <p>Aucune lettre n'a été prorposée pour le moment.</p>
         <?php endif; ?>
         </p>
     </div>
@@ -168,20 +185,24 @@
         }
         ?>
     </div>
-    <div class="reponse">
-        <?php if ($motTrouve) {
-            echo '<p>Félicitations, vous avez trouvé le mot !</p>';
-            echo '<form action="" method="POST">
-                <button name="rejouer">Rejouer</button>
-                </form>';
-            }elseif ($chancesRestante == 0) {
-                echo '<p>Dommage, vous n\'avez pas trouvé le mot !</p>
-                    <p>Le bon mot était : ' . $motMystere . ' !';
-            echo '<form action="" method="POST">
-                <button name="rejouer">Rejouer</button>
-                </form>';
-            }
-        ?>
+    <div class="reponse <?php echo $motTrouve ? 'visible' : 'hidden'; ?>">
+        <div>
+            <?php if ($motTrouve) {
+                echo '<h1>You Win !</h1>';
+                echo '<p>Félicitations, vous avez trouvé le mot !</p>';
+                echo '<form action="" method="POST">
+                    <button name="rejouer">Rejouer</button>
+                    </form>';
+                }elseif ($chancesRestante == 0) {
+                    echo '<h1>Game Over</h1>
+                    <p>Dommage, vous n\'avez pas trouvé le mot !</p>
+                        <p>Le bon mot était : ' . $motMystere . ' !';
+                echo '<form action="" method="POST">
+                    <button name="rejouer">Rejouer</button>
+                    </form>';
+                }
+            ?>
+        </div>
     </div>
 </body>
 
